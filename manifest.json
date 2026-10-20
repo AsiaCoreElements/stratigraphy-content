@@ -1,21 +1,7 @@
-
-{
-  "app": "Stratigraphy Master",
-  "version": 2,
-  "images": [
-    {
-      "title": "Geological Image 1",
-      "filename": "IMG_8666~2.jpg",
-      "url": "https://asiacoreelements.github.io/stratigraphy-content/IMG_8666~2.jpg"
-    }
-  ],
-  "diagrams": [
-    {
-      "title": "Grand Canyon Stratigraphic Column",
-      "filename": "grand canyon strat column.png",
-      "url": "https://asiacoreelements.github.io/stratigraphy-content/grand%20canyon%20strat%20column.png"
-    }
-  ],
-  "documents": [],
-  "quizzes": []
-}
+"documents": [
+  {
+    "title": "Geology Notes",
+    "filename": "geology-notes.pdf",
+    "url": "https://asiacoreelements.github.io/stratigraphy-content/geology-notes.pdf"
+  }
+],
