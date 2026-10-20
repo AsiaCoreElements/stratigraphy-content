@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Ichnology Mastery Quiz</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        geology: {
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155',
+                            600: '#475569',
+                            accent: '#d97706', // Terracotta amber
+                            accentHover: '#b45309',
+                            earth: '#78350f',
+                            sand: '#fef3c7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .serif-title {
+            font-family: 'Merriweather', serif;
+        }
+    </style>
+</head>
+<body class="h-full bg-geology-900 text-slate-100 flex flex-col justify-between selection:bg-amber-600 selection:text-white">
+
+    <!-- Header -->
+    <header class="w-full bg-geology-800 border-b border-geology-700 py-4 px-6 shadow-md">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-amber-600 flex items-center justify-center font-bold text-xl shadow-inner serif-title text-white">Ω</div>
+                <div>
+                    <h1 class="serif-title font-bold text-lg text-amber-500 tracking-wide">Ichnology Graduate Mastery</h1>
+                    <p class="text-xs text-slate-400">Trace Fossils, Ichnofacies & Sequence Stratigraphy</p>
+                </div>
+            </div>
+            <div id="quiz-progress-badge" class="hidden text-xs font-semibold px-3 py-1 bg-geology-700 rounded-full border border-geology-600">
+                Question <span id="current-q-num">1</span> of <span id="total-q-num">10</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow flex items-center justify-center p-4 sm:p-6">
+        <div class="w-full max-w-2xl bg-geology-800 border border-geology-700 rounded-2xl shadow-2xl p-6 sm:p-10 relative overflow-hidden transition-all duration-300">
+
+            <!-- Welcome Screen -->
+            <div id="welcome-screen" class="space-y-6 text-center py-6">
+                <div class="inline-block p-4 bg-amber-600/10 border border-amber-600/30 rounded-2xl text-amber-500 mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                </div>
+                <h2 class="serif-title text-2xl sm:text-3xl font-bold text-white">Advanced Ichnology Evaluation</h2>
+                <p class="text-slate-300 text-sm sm:text-base max-w-lg mx-auto leading-relaxed">
+                    Test your expertise in graduate-level ichnology. Covering ethological behavior categories, classic ichnofacies (*Skolithos*, *Cruziana*, *Zoophycos*, *Nereites*, *Glossifungites*, *Scoyenia*, *Trypanites*), Bioturbation Index (BI 0–6), and sequence-stratigraphic surfaces.
+                </p>
+                <div class="pt-4">
+                    <button onclick="startQuiz()" class="px-8 py-3.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl shadow-lg transition transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-geology-800">
+                        Begin Master Examination
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Screen -->
+            <div id="quiz-screen" class="hidden space-y-6">
+                <!-- Progress bar -->
+                <div class="w-full bg-geology-700 h-2 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="bg-amber-500 h-full transition-all duration-300" style="width: 10%"></div>
+                </div>
+
+                <!-- Question Title & Category Badge -->
+                <div class="space-y-2">
+                    <span id="question-category" class="inline-block text-xs font-semibold px-2.5 py-1 bg-amber-600/20 text-amber-400 border border-amber-600/30 rounded-md"></span>
+                    <h3 id="question-text" class="serif-title text-lg sm:text-xl font-semibold text-white leading-snug"></h3>
+                </div>
+
+                <!-- Options List -->
+                <div id="options-container" class="space-y-3 pt-2">
+                    <!-- Dynamically populated options -->
+                </div>
+
+                <!-- Explanation Box -->
+                <div id="explanation-box" class="hidden mt-4 p-4 rounded-xl border bg-geology-900/80 transition-all">
+                    <div class="flex items-start space-x-3">
+                        <div id="explanation-icon" class="flex-shrink-0 mt-0.5"></div>
+                        <div>
+                            <h4 id="explanation-title" class="font-semibold text-sm mb-1"></h4>
+                            <p id="explanation-text" class="text-xs sm:text-sm text-slate-300 leading-relaxed"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Next Button Container -->
+                <div id="action-container" class="pt-4 flex justify-end hidden">
+                    <button id="next-btn" onclick="nextQuestion()" class="px-6 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl shadow transition flex items-center space-x-2">
+                        <span>Next Question</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Screen -->
+            <div id="results-screen" class="hidden text-center space-y-6 py-4">
+                <div class="w-20 h-20 bg-amber-600/20 border-2 border-amber-600 text-amber-500 rounded-full flex items-center justify-center mx-auto text-3xl font-bold serif-title shadow-inner" id="score-circle">
+                    0/10
+                </div>
+                <div class="space-y-2">
+                    <h2 class="serif-title text-2xl sm:text-3xl font-bold text-white">Examination Completed</h2>
+                    <p id="result-feedback" class="text-slate-300 text-sm sm:text-base max-w-md mx-auto"></p>
+                </div>
+                <div class="pt-4 flex flex-col sm:flex-row justify-center gap-4">
+                    <button onclick="restartQuiz()" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl shadow-lg transition">
+                        Retake Examination
+                    </button>
+                    <button onclick="reviewAnswers()" class="px-6 py-3 bg-geology-700 hover:bg-geology-600 text-slate-200 font-semibold rounded-xl border border-geology-600 transition">
+                        Review Questions
+                    </button>
+                </div>
+            </div>
+
+            <!-- Review Screen -->
+            <div id="review-screen" class="hidden space-y-6 max-h-[70vh] overflow-y-auto pr-2">
+                <div class="flex items-center justify-between border-b border-geology-700 pb-3">
+                    <h3 class="serif-title text-xl font-bold text-white">Detailed Answer Review</h3>
+                    <button onclick="backToResults()" class="text-xs text-amber-400 hover:underline">Back to Summary</button>
+                </div>
+                <div id="review-list" class="space-y-4">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-geology-800 border-t border-geology-700 py-3 px-6 text-center text-xs text-slate-400">
+        Advanced Ichnology & Trace Fossil Assessment Tool &bull; Designed for Graduate Earth Science Scholars
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        const questions = [
+            {
+                category: "Ethology",
+                question: "Which ethological category describes structured dwelling burrows constructed by suspension feeders or carnivores for permanent or semi-permanent habitation?",
+                options: [
+                    "Fodichnia (Feeding structures)",
+                    "Domichnia (Dwelling structures)",
+                    "Pascichnia (Grazing structures)",
+                    "Cubichnia (Resting traces)"
+                ],
+                correct: 1,
+                explanation: "Domichnia represent permanent or semi-permanent dwelling structures built by sessile or semi-sessile suspension feeders, detritivores, or carnivores (e.g., Skolithos, Ophiomorpha)."
+            },
+            {
+                category: "Ichnofacies",
+                question: "In ichnofacies analysis, which shallow-marine, high-energy environment is characterized primarily by vertical, cylindrical suspension-feeder structures such as Skolithos and Diplocraterion?",
+                options: [
+                    "Cruziana ichnofacies",
+                    "Zoophycos ichnofacies",
+                    "Skolithos ichnofacies",
+                    "Glossifungites ichnofacies"
+                ],
+                correct: 2,
+                explanation: "The Skolithos ichnofacies typifies high-energy, shifting substrate environments like foreshore and shoreface settings, where vertical burrows resist wave action and shifting sands."
+            },
+            {
+                category: "Sequence Stratigraphy",
+                question: "What is the primary significance of the Glossifungites ichnofacies in sequence stratigraphy and basin analysis?",
+                options: [
+                    "Indication of abyssal turbidite deposition in starved basins",
+                    "Identification of firmground subaerial or submarine ravinement and omission surfaces",
+                    "Signifying extreme hypersaline lake conditions in arid red-bed basins",
+                    "Marking maximum flooding surfaces with low-oxygen bottom waters"
+                ],
+                correct: 1,
+                explanation: "The Glossifungites ichnofacies characterizes dewatered, cohesive firmgrounds formed during erosion or prolonged non-deposition (omission surfaces), frequently marking sequence boundaries and transgressive ravinement surfaces."
+            },
+            {
+                category: "Bioturbation Index",
+                question: "In the standard Bioturbation Index (BI) rating scheme ranging from BI 0 (undisturbed) to BI 6 (complete biogenic homogenization), what characterizes a rating of BI 3?",
+                options: [
+                    "No bioturbation; original sedimentary structures completely preserved",
+                    "Slight bioturbation; up to 10% of bedding disturbed by discrete burrows",
+                    "Moderate bioturbation; bedding is still distinct but significantly disrupted by discrete burrows (10-30% disruption)",
+                    "High bioturbation; bedding is mostly obliterated with only isolated patches of primary lamination remaining"
+                ],
+                correct: 2,
+                explanation: "BI 3 represents moderate bioturbation where bedding remains recognizable and distinct, though noticeably disrupted by discrete, scattered burrows covering roughly 10% to 30% of the sediment volume."
+            },
+            {
+                category: "Ethology",
+                question: "How do Agrichnia differ fundamentally from Pascichnia in behavioral classification?",
+                options: [
+                    "Agrichnia are gardening/farming networks designed to culture microorganisms, whereas Pascichnia are systematic grazing trails.",
+                    "Agrichnia are temporary escape structures, whereas Pascichnia are permanent dwellings.",
+                    "Agrichnia are predatory attack marks, whereas Pascichnia are resting impressions.",
+                    "There is no functional difference; both terms are interchangeable synonyms."
+                ],
+                correct: 0,
+                explanation: "Agrichnia (e.g., Paleodictyon) represent complex geometrical farming networks constructed to cultivate bacteria or fungi, whereas Pascichnia (e.g., Helminthopsis) are random or systematic surface grazing traces."
+            },
+            {
+                category: "Ichnofacies",
+                question: "The Nereites ichnofacies is predominantly associated with which depositional realm and ecological condition?",
+                options: [
+                    "Terrestrial alluvial floodplains and ephemeral ponds",
+                    "Intertidal mudflats with fluctuating salinity",
+                    "Deep-marine bathyal to abyssal settings subject to turbidity currents (flysch deposits)",
+                    "High-energy rocky intertidal coasts"
+                ],
+                correct: 2,
+                explanation: "The Nereites ichnofacies characterizes deep-water, low-energy pelagic and hemipelagic environments and turbidite systems (flysch), dominated by complex grazing and farming traces (pascichnia and agrichnia)."
+            },
+            {
+                category: "Taphonomy",
+                question: "In trace fossil taphonomy, what distinguishes 'endichnia' from 'epichnia' preservation modes?",
+                options: [
+                    "Endichnia are preserved on top of the bedding plane, while epichnia are preserved on the sole.",
+                    "Endichnia are excavated and preserved entirely within the sediment bed, whereas epichnia occur at the upper bedding interface.",
+                    "Endichnia form exclusively in amber, while epichnia form in limestone.",
+                    "Endichnia are diagenetically replaced by pyrite, while epichnia are composed of quartz sand."
+                ],
+                correct: 1,
+                explanation: "Endichnia are burrows preserved within the interior of a sedimentary bed, whereas epichnia are traces preserved on the upper surface (top) of a bed."
+            },
+            {
+                category: "Ichnofacies",
+                question: "Which ichnofacies is indicative of non-marine environments, such as alluvial plains, floodplains, and ephemeral lake margins experiencing fluctuating water tables?",
+                options: [
+                    "Trypanites ichnofacies",
+                    "Scoyenia ichnofacies",
+                    "Zoophycos ichnofacies",
+                    "Skolithos ichnofacies"
+                ],
+                correct: 1,
+                explanation: "The Scoyenia ichnofacies is the archetypal non-marine red-bed association, reflecting alternating subaerial exposure and subaqueous conditions in continental settings like lakes and floodplains."
+            },
+            {
+                category: "Ethology & Morphology",
+                question: "What is the primary ethological distinction between Cruziana and Rusophycus trace fossils?",
+                options: [
+                    "Cruziana represents bilobed locomotion/crawling trails, whereas Rusophycus represents resting impressions (cubichnia).",
+                    "Cruziana are dwelling tubes of polychaetes, while Rusophycus are bivalve escape burrows.",
+                    "Cruziana are crustacean farming networks, while Rusophycus are trilobite swimming traces.",
+                    "There is no morphological link; Cruziana are vertebrate tracks and Rusophycus are plant roots."
+                ],
+                correct: 0,
+                explanation: "Both are typically produced by arthropods (such as trilobites). Rusophycus is a coffee-bean-shaped resting trace (cubichnia), whereas Cruziana is an elongated furrow resulting from locomotion (repichnia)."
+            },
+            {
+                category: "Taphonomy & Architecture",
+                question: "How do composite or compound trace fossils (e.g., complex multi-behavioral structures) provide superior paleoecological insight compared to simple single-behavior traces?",
+                options: [
+                    "They allow precise radiometric dating of individual sand grains.",
+                    "They record successive behavioral shifts by an organism responding to changing environmental or trophic stressors over time.",
+                    "They exclusively indicate catastrophic burial events during storms.",
+                    "They prove the existence of soft-bodied vertebrate predators."
+                ],
+                correct: 1,
+                explanation: "Compound trace fossils capture sequential behavioral adaptations (e.g., shifting from dwelling to feeding or adjusting to sedimentation) performed by the same organism in response to dynamic environmental conditions."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+        let quizState = 'welcome'; // welcome, quiz, results, review
+
+        function startQuiz() {
+            quizState = 'quiz';
+            currentQuestion = 0;
+            score = 0;
+            userAnswers.fill(null);
+            
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('review-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('quiz-progress-badge').classList.remove('hidden');
+            
+            document.getElementById('total-q-num').innerText = questions.length;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('current-q-num').innerText = currentQuestion + 1;
+            document.getElementById('question-category').innerText = q.category;
+            document.getElementById('question-text').innerText = q.question;
+
+            // Update progress bar
+            const progressPercent = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = progressPercent + '%';
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-geology-700 bg-geology-900/60 hover:bg-geology-700/50 hover:border-amber-600/50 text-slate-200 transition text-sm sm:text-base flex items-center justify-between group";
+                btn.innerHTML = `<span><strong class="text-amber-500 mr-2">${String.fromCharCode(65 + index)}.</strong> ${opt}</span>`;
+                btn.onclick = () => selectOption(index);
+                btn.id = `option-${index}`;
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('explanation-box').classList.add('hidden');
+            document.getElementById('action-container').classList.add('hidden');
+        }
+
+        function selectOption(selectedIndex) {
+            const q = questions[currentQuestion];
+            userAnswers[currentQuestion] = selectedIndex;
+
+            // Disable all option buttons after selection
+            q.options.forEach((_, idx) => {
+                const btn = document.getElementById(`option-${idx}`);
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-geology-700/50', 'hover:border-amber-600/50');
+                
+                if (idx === q.correct) {
+                    btn.classList.remove('bg-geology-900/60', 'border-geology-700');
+                    btn.classList.add('bg-emerald-950/80', 'border-emerald-600', 'text-emerald-200');
+                } else if (idx === selectedIndex) {
+                    btn.classList.remove('bg-geology-900/60', 'border-geology-700');
+                    btn.classList.add('bg-rose-950/80', 'border-rose-600', 'text-rose-200');
+                } else {
+                    btn.classList.add('opacity-50');
+                }
+            });
+
+            // Show explanation
+            const isCorrect = (selectedIndex === q.correct);
+            if (isCorrect) score++;
+
+            const expBox = document.getElementById('explanation-box');
+            expBox.classList.remove('hidden', 'bg-emerald-950/40', 'border-emerald-600/40', 'bg-rose-950/40', 'border-rose-600/40');
+            
+            if (isCorrect) {
+                expBox.classList.add('bg-emerald-950/40', 'border-emerald-600/40');
+                document.getElementById('explanation-icon').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>`;
+                document.getElementById('explanation-title').innerText = "Correct Analysis";
+                document.getElementById('explanation-title').className = "font-semibold text-sm mb-1 text-emerald-400";
+            } else {
+                expBox.classList.add('bg-rose-950/40', 'border-rose-600/40');
+                document.getElementById('explanation-icon').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>`;
+                document.getElementById('explanation-title').innerText = "Incorrect Analysis";
+                document.getElementById('explanation-title').className = "font-semibold text-sm mb-1 text-rose-400";
+            }
+
+            document.getElementById('explanation-text').innerText = q.explanation;
+            document.getElementById('action-container').classList.remove('hidden');
+
+            // Change button text if last question
+            const nextBtn = document.getElementById('next-btn');
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerHTML = `<span>View Results</span><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>`;
+            } else {
+                nextBtn.innerHTML = `<span>Next Question</span><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>`;
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            quizState = 'results';
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('quiz-progress-badge').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+
+            document.getElementById('score-circle').innerText = `${score}/${questions.length}`;
+
+            let feedback = "";
+            const percentage = (score / questions.length) * 100;
+            if (percentage >= 90) {
+                feedback = "Outstanding! You demonstrate master-level comprehension of ichnological associations, ethological classifications, and sequence stratigraphic architectures.";
+            } else if (percentage >= 70) {
+                feedback = "Solid performance! You have a firm grasp of core ichnological concepts, with minor gaps in specialized trace fossil suites.";
+            } else if (percentage >= 50) {
+                feedback = "Moderate understanding. Review ichnofacies distribution models and taphonomic preservation pathways to strengthen your knowledge.";
+            } else {
+                feedback = "Keep studying! Advanced ichnology requires careful integration of sedimentology, ethology, and stratigraphy. Review the detailed explanations.";
+            }
+            document.getElementById('result-feedback').innerText = feedback;
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+
+        function reviewAnswers() {
+            quizState = 'review';
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('review-screen').classList.remove('hidden');
+
+            const reviewList = document.getElementById('review-list');
+            reviewList.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const userAnsIdx = userAnswers[idx];
+                const isCorrect = userAnsIdx === q.correct;
+                
+                const item = document.createElement('div');
+                item.className = `p-4 rounded-xl border ${isCorrect ? 'bg-emerald-950/20 border-emerald-600/40' : 'bg-rose-950/20 border-rose-600/40'} space-y-2`;
+                
+                let optionsHtml = '';
+                q.options.forEach((opt, oIdx) => {
+                    let badge = '';
+                    if (oIdx === q.correct) badge = '<span class="text-emerald-400 font-semibold ml-2">[Correct Answer]</span>';
+                    else if (oIdx === userAnsIdx && !isCorrect) badge = '<span class="text-rose-400 font-semibold ml-2">[Your Answer]</span>';
+                    else if (oIdx === userAnsIdx && isCorrect) badge = '<span class="text-emerald-400 font-semibold ml-2">[Your Answer]</span>';
+
+                    optionsHtml += `<div class="text-xs sm:text-sm ${oIdx === q.correct ? 'text-emerald-200 font-medium' : (oIdx === userAnsIdx ? 'text-rose-200' : 'text-slate-400')}">• ${opt} ${badge}</div>`;
+                });
+
+                item.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-geology-700 text-amber-400">Q${idx + 1}: ${q.category}</span>
+                        <span class="text-xs font-bold ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}">${isCorrect ? 'Correct' : 'Incorrect'}</span>
+                    </div>
+                    <h4 class="text-sm sm:text-base font-semibold text-white">${q.question}</h4>
+                    <div class="space-y-1 pt-1">${optionsHtml}</div>
+                    <p class="text-xs text-slate-300 pt-2 border-t border-geology-700/50"><strong>Explanation:</strong> ${q.explanation}</p>
+                `;
+                reviewList.appendChild(item);
+            });
+        }
+
+        function backToResults() {
+            document.getElementById('review-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
