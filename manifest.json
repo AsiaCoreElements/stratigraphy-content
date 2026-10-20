@@ -1,7 +1,14 @@
+
 {
   "app": "Stratigraphy Master",
-  "version": 1,
-  "images": [],
+  "version": 2,
+  "images": [
+    {
+      "title": "Geological Image 1",
+      "filename": "IMG_8666~2.jpg",
+      "url": "https://asiacoreelements.github.io/stratigraphy-content/IMG_8666~2.jpg"
+    }
+  ],
   "diagrams": [],
   "documents": [],
   "quizzes": []
