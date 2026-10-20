@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Stratigraphy Master Guide: Beginner to Advanced</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 9999px; }
+        .fade-in { animation: fadeIn 0.2s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="h-full bg-slate-900 text-slate-100 antialiased flex flex-col overflow-hidden">
+
+    <!-- Top Navigation Bar -->
+    <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur sticky top-0 z-40 px-4 sm:px-6 h-16 flex items-center justify-between shrink-0">
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleMobileSidebar()" class="lg:hidden p-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-600 via-blue-600 to-indigo-600 flex items-center justify-center font-extrabold text-white text-sm shadow-md">
+                ISM
+            </div>
+            <div>
+                <h1 class="font-bold text-sm sm:text-base text-white tracking-tight">Indian Stratigraphy Master Guide</h1>
+                <p class="text-xs text-slate-400 hidden sm:block">Beginner to Advanced &bull; Complete Curricular Reference &amp; Quiz Engine</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <button onclick="switchWorkspace('study')" id="nav-btn-study" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 text-white shadow-sm transition">
+                Study Guide
+            </button>
+            <button onclick="switchWorkspace('quiz')" id="nav-btn-quiz" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition">
+                Interactive Quiz Hub
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <div class="flex-1 flex overflow-hidden relative">
+
+        <!-- Sidebar Navigation Tree -->
+        <aside id="sidebar" class="absolute lg:relative inset-y-0 left-0 z-30 w-80 bg-slate-950 border-r border-slate-800 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 shrink-0">
+            <div class="p-4 border-b border-slate-800/80 flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Curriculum Tree</span>
+                <button onclick="toggleMobileSidebar()" class="lg:hidden text-slate-400 hover:text-white">✕</button>
+            </div>
+            <div id="tree-container" class="flex-1 overflow-y-auto p-3 space-y-4 text-sm">
+                <!-- Tree injected via JS -->
+            </div>
+        </aside>
+
+        <!-- Backdrop for mobile sidebar -->
+        <div id="sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 z-20 bg-slate-950/60 backdrop-blur-sm lg:hidden hidden"></div>
+
+        <!-- Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden bg-slate-900">
+            
+            <!-- STUDY WORKSPACE -->
+            <div id="workspace-study" class="flex-1 overflow-y-auto p-4 sm:p-8 max-w-4xl w-full mx-auto space-y-6 fade-in">
+                <div id="content-display-card" class="bg-slate-950 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+                    <!-- Dynamic content card injected via JS -->
+                </div>
+            </div>
+
+            <!-- QUIZ WORKSPACE -->
+            <div id="workspace-quiz" class="flex-1 overflow-y-auto p-4 sm:p-8 max-w-3xl w-full mx-auto space-y-6 hidden fade-in">
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-white">Multi-Topic Practice Quiz</h2>
+                            <p class="text-xs text-slate-400">Test your mastery across all 4 progressive levels of Indian stratigraphy.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <select id="quiz-topic-select" onchange="changeQuizTopic(this.value)" class="bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-xl px-3 py-2 outline-none">
+                                <option value="all">All Topics Combined</option>
+                                <option value="level1">Level 1: Principles & Craton Basics</option>
+                                <option value="level2">Level 2: Archaean Cratons & Belts</option>
+                                <option value="level3">Level 3: Proterozoic Purana Basins</option>
+                                <option value="level4">Level 4: Phanerozoic Successions</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Active View -->
+                    <div id="quiz-active-container" class="space-y-6">
+                        <div class="flex items-center justify-between text-xs text-slate-400">
+                            <span id="quiz-q-counter" class="font-bold text-blue-400">Question 1 of 20</span>
+                            <div class="flex items-center gap-3">
+                                <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Correct: <strong id="q-stat-correct">0</strong></span>
+                                <span class="px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20">Incorrect: <strong id="q-stat-incorrect">0</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="quiz-progress-bar" class="h-full bg-blue-600 transition-all duration-300" style="width: 5%;"></div>
+                        </div>
+
+                        <h3 id="quiz-question-text" class="text-base sm:text-lg font-semibold text-white leading-snug">Loading question...</h3>
+
+                        <div id="quiz-options-list" class="space-y-3">
+                            <!-- Options injected -->
+                        </div>
+
+                        <div id="quiz-explanation-box" class="hidden rounded-xl p-4 border space-y-2 fade-in">
+                            <div class="flex items-center gap-2">
+                                <span id="quiz-exp-icon" class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white">✓</span>
+                                <h4 id="quiz-exp-title" class="font-bold text-sm">Explanation</h4>
+                            </div>
+                            <p id="quiz-exp-text" class="text-xs sm:text-sm text-slate-300 leading-relaxed"></p>
+                        </div>
+
+                        <div class="flex justify-end pt-2">
+                            <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="hidden px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs sm:text-sm rounded-xl shadow-md transition">
+                                Next Question &rarr;
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Completion View -->
+                    <div id="quiz-complete-container" class="hidden text-center py-10 space-y-6 fade-in">
+                        <div class="w-16 h-16 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">
+                            🏆
+                        </div>
+                        <div class="space-y-1">
+                            <h3 class="text-2xl font-bold text-white">Quiz Completed!</h3>
+                            <p class="text-slate-400 text-sm">You have successfully finished the practice round.</p>
+                        </div>
+                        <div class="inline-block bg-slate-900 border border-slate-800 rounded-2xl px-6 py-4">
+                            <span class="text-xs text-slate-400 uppercase font-semibold block mb-1">Final Score</span>
+                            <span id="quiz-final-score" class="text-3xl font-black text-blue-400">0 / 20</span>
+                        </div>
+                        <div>
+                            <button onclick="restartQuiz()" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs sm:text-sm rounded-xl shadow-md transition">
+                                Restart Quiz
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Script Application Logic -->
+    <script>
+        /* ================= MASTER CURRICULUM DATA REPOSITORY ================= */
+        const CURRICULUM_DATA = [
+            {
+                id: 'level1',
+                title: 'Level 1: Principles & Craton Basics',
+                icon: '🟢',
+                children: [
+                    {
+                        id: 'l1_principles',
+                        title: '1A. Principles & Time Scale',
+                        content: {
+                            subtitle: 'Fundamentals of Stratigraphic Correlation',
+                            summary: 'Covers Nicholas Steno’s fundamental laws of stratigraphy, historical philosophical debates between catastrophism and uniformitarianism, and William Smith’s faunal succession principles.',
+                            details: [
+                                { label: 'Steno’s Laws', text: '1. Law of Superposition (younger strata on older). 2. Law of Original Horizontality (sediments deposit flat). 3. Law of Lateral Continuity (strata continue laterally until terminated). 4. Cross-Cutting Relationships (intrusions/faults are younger than rocks they cut).' },
+                                { label: 'Philosophical Frameworks', text: 'Catastrophism (Cuvier): Earth molded by short, violent, episodic floods and quakes. Uniformitarianism (Hutton & Lyell): "Present is key to past" (Lyell emphasized uniformity of process, rate, and steady state). Modern Actualism: Physical laws are constant, but rates of processes and catastrophic events can vary.' },
+                                { label: 'Biostratigraphy', text: 'Law of Faunal Succession (William Smith): Fossils occur in a definite, invariable vertical order in strata, enabling relative age correlation using index fossils.' }
+                            ],
+                            significance: 'Essential foundation for deciphering relative geologic time before radiometric dating.'
+                        }
+                    },
+                    {
+                        id: 'l1_basics',
+                        title: '1B. Craton & Basin Basics',
+                        content: {
+                            subtitle: 'Architectural Framework of the Indian Shield',
+                            summary: 'Explains the structural dichotomy of cratons into shields (deformed crystalline basements) and platform covers (syneclises and grabens), alongside the 4-stage evolution of shield areas.',
+                            details: [
+                                { label: 'Shield vs Platform Cover', text: 'Shields form the stable, hardened central cores of cratons composed of deformed Archean/Paleoproterozoic rocks. Platform covers comprise younger, undeformed Upper Proterozoic and Phanerozoic sedimentary basins occupying broad depressions (Syneclises like Vindhyan) or fault troughs (Grabens like Gondwana).' },
+                                { label: '4 Stages of Shield Evolution', text: 'Stage 1: Older greenstone belts (primordial crust remnants). Stage 2: Emplacement of fundamental granitic gneisses & migmatites. Stage 3: Troughs forming over gneisses filled by newer greenstone volcano-sedimentary sequences. Stage 4: Intense deformation, metamorphism, and young granitic plutonism.' },
+                                { label: 'Tectonic Trends of India', text: 'Four major structural grain trends: 1. Early Archean (~3.2 Ga). 2. Singhbhum Iron-Ore Orogeny (~2.9 Ga). 3. Late Archean Peninsular Gneiss/Eastern Ghats. 4. Dharwar structural trend.' }
+                            ],
+                            significance: 'Provides the structural map used to navigate India’s cratonic blocks.'
+                        }
+                    }
+                ]
+            },
+            {
+                id: 'level2',
+                title: 'Level 2: Archaean Cratons & Mobile Belts',
+                icon: '🟡',
+                children: [
+                    {
+                        id: 'l2_dharwar',
+                        title: '2A-1. Dharwar Craton',
+                        content: {
+                            subtitle: 'Western & Eastern Dharwar Craton (WDC & EDC)',
+                            summary: 'The classic southern craton divided into WDC (older TTG basement, wide shelf greenstone belts) and EDC (calc-alkaline batholiths, N-S gold greenstone superbelts) separated by the Closepet Granite.',
+                            details: [
+                                { label: 'Basement Sequence', text: 'Gorur Gneiss (3.35 Ga TTG) → Sargur Group (>3.2 Ga high-grade enclaves with komatiites & BIF) → Peninsular Gneiss (3.2–2.9 Ga migmatite complex).' },
+                                { label: 'Dharwar Supergroup (2.9–2.6 Ga)', text: 'Marked by the basal Kartikere Conglomerate. Bababudan Group: Kalaspura, Allampura, Santaveri, Mulaingiri (basalts, quartzites, ultramafic sills, BIF). Chitradurga Group: Vanivilas Subgroup (stromatolitic carbonates, Mn-Fe) & Ranibennur Subgroup (greywackes, turbidites).' },
+                                { label: 'Closepet Granite', text: 'A 400 km long, N-S trending linear porphyritic granite batholith (2510–2380 Ma) acting as the boundary between WDC and EDC.' }
+                            ],
+                            significance: 'Premier metallogenic province for gold (Kolar, Hutti) and iron/manganese ores.'
+                        }
+                    },
+                    {
+                        id: 'l2_singhbhum',
+                        title: '2A-2. Singhbhum Craton',
+                        content: {
+                            subtitle: 'South-to-North Archean Accretion & Iron Ore Group',
+                            summary: 'Located in eastern India, featuring the Older Metamorphic Group (>3.44 Ga), Singhbhum Granite phases I-III, the rich Iron Ore Group, and the North Singhbhum Mobile belt across the Singhbhum Shear Zone.',
+                            details: [
+                                { label: 'Basement & IOG', text: 'OMG (>3.44 Ga) & OMTG (3.44–3.40 Ga) → Singhbhum Granite Phases I, II, III (3.34 to 3.12 Ga) → Iron Ore Group (3.30–3.10 Ga: Sandstone/Conglomerate → Lower Lava → Lower Phyllite → BIF → Upper Phyllite → Upper Lava).' },
+                                { label: 'North Singhbhum Mobile Belt', text: 'Separated by the Singhbhum Shear Zone (SSZ - famous for Cu, U). Contains Singhbhum Group (Chaibasa mica schists & Dalbhum phyllites), followed by rift volcanics of the Dalma and Dhanjori groups (~2.8 Ga) and unmetamorphosed Kolhan Group.' }
+                            ],
+                            significance: 'Hosts world-class BIF iron deposits and India’s primary uranium-copper shear belt.'
+                        }
+                    },
+                    {
+                        id: 'l2_bastar',
+                        title: '2A-3. Bastar Craton',
+                        content: {
+                            subtitle: 'Central Indian Nucleus & Kotri-Dongargarh Belt',
+                            summary: 'Enclosed by major rifts and mobile belts, featuring ancient supracrustals (Sukma, Amgaon, Bengpal) and the extensive Dongargarh Supergroup rifting cycle.',
+                            details: [
+                                { label: 'Basement Enclaves', text: 'Sukma Group (~3.5–3.0 Ga: mafics, ultramafics, BIF) → Amgaon Group → Bengpal Group (~2.5 Ga: quartzites, metabasics, Bailadila iron ores).' },
+                                { label: 'Dongargarh Supergroup', text: 'Nandgaon Group (Bijli Rhyolite & Pitepani volcanics, ~2.5 Ga) → Dongargarh Granite (~2.3 Ga) → Khairagarh Group (clastics & Sitagota/Mangikhuta mafic rift volcanics).' }
+                            ],
+                            significance: 'Critical record of Paleoproterozoic continental rifting and LIP magmatism.'
+                        }
+                    },
+                    {
+                        id: 'l2_aravalli',
+                        title: '2A-4. Aravalli & Bundelkhand Cratons',
+                        content: {
+                            subtitle: 'Northwestern Shield & Great Boundary Fault',
+                            summary: 'Divided by the Great Boundary Fault, featuring the Banded Gneissic Complex (BGC), Aravalli Supergroup rift sediments, Delhi Supergroup fold belt, and Bundelkhand granite complex.',
+                            details: [
+                                { label: 'Aravalli & Delhi', text: 'Aravalli Supergroup (2.2–1.85 Ga: Delwara, Jhamarkotra phosphatic dolomites, Udaipur, Jharol turbidites) → Delhi Supergroup (~1.72–1.45 Ga: Ralalo, Alwar quartzites, Ajabgarh limestones/shales) → Erinpura Granite (~850 Ma) → Malani Rhyolites (780–680 Ma) → Marwar Supergroup.' },
+                                { label: 'Bundelkhand Craton', text: 'Granitic complex (~3.3–2.5 Ga) invaded by giant quartz veins and extensive mafic dyke swarms, flanked by Bijawar and Gwalior marginal basins.' }
+                            ],
+                            significance: 'Exhibits multi-phase Proterozoic orogenic cycles and massive anorogenic felsic volcanism (Malani).'
+                        }
+                    },
+                    {
+                        id: 'l2_mobile',
+                        title: '2B. Proterozoic Mobile Belts',
+                        content: {
+                            subtitle: 'CITZ, EGMB, and Southern Granulite Terrane',
+                            summary: 'Major collision and shear zones suturing Indian cratonic blocks: Central Indian Tectonic Zone (Sausar, Betul, Mahakoshal), Eastern Ghats Mobile belt (2 Wilson cycles), and Pandyan Mobile belt with UHP/UHT granulites.',
+                            details: [
+                                { label: 'CITZ (Central Indian Tectonic Zone)', text: 'Bounded by SNNF, SNSF, Tan Shear, and CIS. Features Mahakoshal belt, Betul arc, and Sausar belt (Mansar Formation manganese deposits).' },
+                                { label: 'Eastern Ghats Mobile Belt (EGMB)', text: 'Stretches along east coast. Divided into Transition zone, Charnockite zone, and Khondalite zone (manganese-rich kodurites/gondites). Records two Proterozoic Wilson cycles.' },
+                                { label: 'Southern Granulite Terrane', text: 'Separated from Dharwar by the Fermor Line. Comprises Salem, Nilgiri (deepest exhumed crust), Madras, Madurai (UHP/UHT up to 1100°C), and Trivandrum (Kerala Khondalite belt) blocks bounded by Moyar-Bhavani, Palghat-Cauvery, and Achankovil shear zones.' }
+                            ],
+                            significance: 'Key terranes for understanding Rodinia and Gondwana supercontinent assembly.'
+                        }
+                    }
+                ]
+            },
+            {
+                id: 'level3',
+                title: 'Level 3: Proterozoic Purana Basins',
+                icon: '🟠',
+                children: [
+                    {
+                        id: 'l3_cuddapah',
+                        title: '3A. Cuddapah & Kurnool Basins',
+                        content: {
+                            subtitle: 'Epicratonic Basin Evolution & Economic Mineralization',
+                            summary: 'Major crescent basin on EDC containing Lower Purana Cuddapah Supergroup (Papaghni, Chitravati, Nallamalai, Srisailam) and Unconformable Upper Purana Kurnool Group.',
+                            details: [
+                                { label: 'Cuddapah Supergroup', text: 'Papaghni Gp (Gulcheru sst, Vempalle dolostone with Tummalapalle U & asbestos) → Chitravati Gp (Pulivendla, Tadpatri shales/tuffs, Gandikota) → Nallamalai Gp (Bairenkonda, Cumbum slates with Mangampeta barytes & Agnigundala Pb-Zn) → Srisailam Quartzite.' },
+                                { label: 'Kurnool Group', text: 'Unconformable over Cuddapah. Banganapalle Fm (diamondiferous conglomerate) → Narji Lst (Cuddapah slabs) → Owk Shale → Paniam Qtz → Kolikuntala Lst → Nandyal Shale.' }
+                            ],
+                            significance: 'India’s most thoroughly studied Purana basin with world-class uranium, barytes, and diamond reserves.'
+                        }
+                    },
+                    {
+                        id: 'l3_vindhyan',
+                        title: '3B. Vindhyan & Chhattisgarh Basins',
+                        content: {
+                            subtitle: 'Platform Cover & Diamondiferous Horizons',
+                            summary: 'Vindhyan Syneclise north of Son-Narmada lineament containing Semri (Lower Vindhyan) with Porcellinite markers, and Kaimur, Rewa, Bhander groups (Upper Vindhyan).',
+                            details: [
+                                { label: 'Vindhyan Supergroup', text: 'Semri Group (~1.3 Ga: Basal, Porcellinite volcanic ash marker, Kheinjua, Rohtas Lst) → Kaimur Group → Rewa Group (Diamondiferous conglomerate at Panna) → Bhander Group (Sirbu shales, Bhander Lst with Conophyton stromatolites).' },
+                                { label: 'Chhattisgarh & Indravati', text: 'Chhattisgarh Supergroup (~36,000 sq km: Singhora, Chandarpur, Raipur groups) & Indravati Basin (700–750 Ma shelf carbonates and shales).' }
+                            ],
+                            significance: 'Preserves the earliest records of multicellular life, acritarchs, and cratonic platform stability.'
+                        }
+                    },
+                    {
+                        id: 'l3_others',
+                        title: '3C. Kaladgi, Bhima & Marwar Basins',
+                        content: {
+                            subtitle: 'Western Cratonic & Rajasthan Cover Sequences',
+                            summary: 'Proterozoic basins on western Dharwar margin (Kaladgi-Badami binary basin, Bhima limestone basin with Gogi uranium) and Marwar Supergroup with Malani rhyolites.',
+                            details: [
+                                { label: 'Kaladgi & Bhima', text: 'Kaladgi Basin: Bagalkot Gp (Deformed) + Badami Gp (Undeformed) separated by angular unconformity. Bhima Basin: Rabanpalli → Shahabad Lst → Sedam → Andola (Gogi uranium occurrence).' },
+                                { label: 'Marwar Basin & Malani', text: 'Malani Igneous Suite (780–680 Ma massive anorogenic ring complexes/rhyolites) overlain by Marwar Supergroup (Jodhpur sst, Bilara Lst, Nagaur evaporites, ~635–543 Ma).' }
+                            ],
+                            significance: 'Marks the Ediacaran transition and Neoproterozoic rifting along western India.'
+                        }
+                    }
+                ]
+            },
+            {
+                id: 'level4',
+                title: 'Level 4: Phanerozoic Successions',
+                icon: '🔴',
+                children: [
+                    {
+                        id: 'l4_palaeozoic',
+                        title: '4A-1. Marine Palaeozoic (Himalayas & Salt Range)',
+                        content: {
+                            subtitle: 'Cambrian to Permian Shelf & Tethyan Sequences',
+                            summary: 'Classic fossiliferous Paleozoic sections of Salt Range (Productus Limestone), Kashmir (Panjal Traps, Zewan fm), and Spiti (Haimanta to Kuling Group).',
+                            details: [
+                                { label: 'Salt Range (Pakistan)', text: 'Saline Series (Gypsum/Salt) → Purple Sst → Neobolus Shale (Cambrian trilobites/brachiopods) → Magnesian Sst → Talchir Boulder Bed → Productus Limestone (World-famous Permian brachiopods/ammonites).' },
+                                { label: 'Kashmir & Spiti', text: 'Kashmir: Syringothyris Lst, Fenestella Shales, Panjal Traps (2300m basaltic flows, Up. Carb-Permian), Zewan Fm (marine Permian). Spiti: Haimanta Group, Muth Quartzite (Devonian), Kuling Group (Gungri Fm), and Mikin Fm P-T boundary.' }
+                            ],
+                            significance: 'Provides the biostratigraphic backbone for Tethyan ocean evolution and the Permian-Triassic extinction boundary.'
+                        }
+                    },
+                    {
+                        id: 'l4_gondwana',
+                        title: '4A-2. Gondwana Supergroup',
+                        content: {
+                            subtitle: 'Permian-Mesozoic Fluvial-Lacustrine Coal Measures',
+                            summary: 'Narrow faulted rift troughs (Damodar, Mahanadi, Godavari) containing Lower Gondwana glacial-to-coal strata (Talchir to Raniganj), Triassic red beds, and Upper Gondwana flora.',
+                            details: [
+                                { label: 'Lower Gondwana (Permian)', text: 'Talchir Fm (Glacial tillites/boulder beds) → Karharbari Fm (*Gangamopteris*) → Barakar Fm (Main prime coking coal measure of India, *Glossopteris*) → Barren Measures (Ironstone shales) → Raniganj Fm (Upper coal seams).' },
+                                { label: 'Middle & Upper Gondwana', text: 'Panchet Fm (Lower Triassic red beds) → Mahadeva/Panchmarhi/Maleri/Tiki (*Dicroidium*) → Rajmahal Traps & Intertrappeans (*Ptilophyllum* flora, Jurassic-Cretaceous) → Kota & Jabalpur formations.' }
+                            ],
+                            significance: 'Vital economic repository for India’s thermal and metallurgical coal and unique Gondwana flora.'
+                        }
+                    },
+                    {
+                        id: 'l4_mesozoic',
+                        title: '4B-1. Mesozoic Marine Basins & Traps',
+                        content: {
+                            subtitle: 'Kutch, Cauvery, Bagh/Lameta, and Deccan Traps',
+                            summary: 'Mesozoic shelf sequences along western (Kutch, Jaisalmer) and eastern coasts (Cauvery), Central Indian Cretaceous beds, and the massive Deccan Flood Basalt Province.',
+                            details: [
+                                { label: 'Kutch & Cauvery Mesozoics', text: 'Kutch: Patcham → Chari (Dhosa Oolite marker) → Katrol → Umia (Neocomian-Albian ammonites). Cauvery: Uttatur → Trichinopoly → Ariyalur → Niniyur (rich Cretaceous foraminifera/corals).' },
+                                { label: 'Deccan Volcanic Province', text: 'Over 320,000–500,000 sq km flood basalts (~65–60 Ma) linked to Réunion plume. Subgroups in Western Ghats: Kasulbai, Lonavala, Devighat, Mahabaleshwar. Underlain by dinosaur-bearing Lameta beds.' }
+                            ],
+                            significance: 'Records the breakup of Gondwanaland, K-Pg extinction events, and continental flood volcanism.'
+                        }
+                    },
+                    {
+                        id: 'l4_cenozoic',
+                        title: '4B-2. Himalayas & Siwalik Molasse',
+                        content: {
+                            subtitle: 'Tertiary Orogeny and Vertebrate Biozones',
+                            summary: 'Himalayan collision history (Indus Suture, MCT, MBT, MFT) and the thick overlying Siwalik molasse basin rich in mammalian biozones.',
+                            details: [
+                                { label: 'Tertiary Succession', text: 'Eocene Subathu Fm (Nummulitic limestone/shale) → Dagshai & Kasauli fms (Murree equivalents) → Assam Tertiary (Jaintia, Barail oil/coal measures, Tipam, Dihing).' },
+                                { label: 'Siwalik Group (5000–6000m)', text: 'Lower Siwalik: Chinji & Kamlial fms (Middle Miocene) → Middle Siwalik: Nagri (*Hipparion*) & Dhokpathan fms (*Stegodon*) → Upper Siwalik: Tatrot, Pinjor, & Boulder Conglomerate fms (Plio-Pleistocene, *Equus*, *Elephas*).' }
+                            ],
+                            significance: 'The ultimate record of Himalayan mountain building, foreland basin sedimentation, and mammalian evolution.'
+                        }
+                    }
+                ]
+            }
+        ];
+
+        /* ================= QUIZ QUESTION BANK ================= */
+        const QUIZ_QUESTIONS = {
+            level1: [
+                {
+                    q: "Which of Steno's laws states that in a normal sedimentary sequence, younger layers of rock sit atop older layers?",
+                    options: ["Law of Original Horizontality", "Law of Superposition", "Law of Lateral Continuity", "Law of Cross-Cutting Relationships"],
+                    correct: 1,
+                    exp: "The Law of Superposition dictates that un-deformed sedimentary strata become younger from bottom to top."
+                },
+                {
+                    q: "Who is recognized as the 'Father of English Geology' and formulated the Law of Faunal Succession?",
+                    options: ["James Hutton", "Charles Lyell", "William Smith", "Baron Georges Cuvier"],
+                    correct: 2,
+                    exp: "William Smith (canal builder and geologist) established that strata can be correlated using consistent fossil assemblages."
+                },
+                {
+                    q: "What is the primary difference between Uniformitarianism (Lyell) and Modern Actualism?",
+                    options: [
+                        "Actualism rejects the laws of physics in the past.",
+                        "Actualism maintains that physical laws are constant, but allows for variable rates and catastrophic events, unlike strict Lyellian gradualism.",
+                        "Uniformitarianism denies that erosion ever occurred.",
+                        "Actualism was proposed before the 19th century."
+                    ],
+                    correct: 1,
+                    exp: "Modern Actualism retains uniform physical laws but acknowledges that rates of processes vary and catastrophes (meteorites, mega-floods) shaped Earth."
+                },
+                {
+                    q: "In the 4-stage evolution of a shield area, what do Stages 1 and 3 represent respectively?",
+                    options: [
+                        "Stage 1: Granitic plutons; Stage 3: Fundamental gneisses",
+                        "Stage 1: Older greenstone belts (primordial crust); Stage 3: Newer greenstone volcanic-sedimentary troughs",
+                        "Stage 1: Platform covers; Stage 3: Ocean trenches",
+                        "Stage 1: Unmetamorphosed sandstones; Stage 3: Basaltic traps"
+                    ],
+                    correct: 1,
+                    exp: "Shield evolution starts with primordial older greenstone fragments (Stage 1), migmatitic gneisses (Stage 2), newer greenstone troughs (Stage 3), and final orogenic plutonism (Stage 4)."
+                }
+            ],
+            level2: [
+                {
+                    q: "Which major linear intrusive granite batholith (~400 km long) separates the Western and Eastern Dharwar Cratons?",
+                    options: ["Mayurbhanj Granite", "Closepet Granite", "Malani Rhyolite", "Erinpura Granite"],
+                    correct: 1,
+                    exp: "The Closepet Granite is a composite N-S trending batholith that serves as the boundary between WDC and EDC."
+                },
+                {
+                    q: "What is the oldest recognized gneissic basement unit in the Western Dharwar Craton, dated at ~3.35 Ga?",
+                    options: ["Peninsular Gneiss", "Gorur Gneiss", "Banded Gneissic Complex", "Tirodi Gneiss"],
+                    correct: 1,
+                    exp: "The Gorur Gneiss (trondhjemitic-tonalitic gneiss near Hassan) is the oldest dated basement component in Western Dharwar."
+                },
+                {
+                    q: "The Singhbhum Shear Zone (SSZ) in eastern India is famous for hosting significant deposits of which minerals?",
+                    options: ["Gold and diamonds", "Copper and uranium", "Manganese and bauxite", "Lead, zinc, and silver"],
+                    correct: 1,
+                    exp: "The Singhbhum Shear Zone is a major arcuate ductile belt renowned for copper, uranium, and apatite-magnetite ores."
+                },
+                {
+                    q: "Which Bastar Craton supracrustal group is celebrated for hosting rich Banded Iron Formation (BIF) ores in the Bailadila range?",
+                    options: ["Sukma Group", "Amgaon Group", "Bailadila Group", "Sausar Group"],
+                    correct: 2,
+                    exp: "The Bailadila Group (~2.4 Ga) consists of quartzites, phyllites, and massive interbeds of high-grade banded iron formation."
+                },
+                {
+                    q: "The Fermor Line in southern India serves as a metamorphic isograd separating which two major provinces?",
+                    options: [
+                        "Dharwar Craton from the Southern Granulite Terrane",
+                        "Aravalli Craton from the Vindhyan Basin",
+                        "Singhbhum Craton from the Indo-Gangetic Alluvium",
+                        "Bastar Craton from the Cuddapah Basin"
+                    ],
+                    correct: 0,
+                    exp: "The Fermor Line marks the transition from amphibolite-facies Dharwar cratonic rocks to granulite-facies rocks of the Southern Granulite Terrane."
+                }
+            ],
+            level3: [
+                {
+                    q: "Which formation at the base of the Kurnool Group is famous for hosting diamondiferous conglomeratic sandstone beds?",
+                    options: ["Gulcheru Quartzite", "Banganapalle Formation", "Paniam Quartzite", "Pulivendla Quartzite"],
+                    correct: 1,
+                    exp: "The Banganapalle Formation forms the basal unit of the Kurnool Group and contains alluvial diamondiferous conglomerates derived from EDC kimberlites."
+                },
+                {
+                    q: "What is the key geochronological marker bed found within the Semri Group (Lower Vindhyan)?",
+                    options: ["Rohtas Limestone", "Porcellinite Formation", "Sirbu Shale", "Bhander Limestone"],
+                    correct: 1,
+                    exp: "The Porcellinite Formation consists of silicified volcanic ash/tuffs acting as a precise marker bed in the Lower Vindhyan."
+                },
+                {
+                    q: "The world-famous Mangampeta bedded barytes deposit in the Cuddapah Basin is hosted within which stratigraphic group?",
+                    options: ["Papaghni Group", "Chitravati Group", "Nallamalai Group (Pullampet Fm)", "Kurnool Group"],
+                    correct: 2,
+                    exp: "Mangampeta barytes occurs in carbonaceous/tuffaceous shales of the Pullampet Formation (Cumbum equivalent) in the Nallamalai Group."
+                },
+                {
+                    q: "The Gogi uranium occurrence is associated with which Neoproterozoic Purana basin?",
+                    options: ["Cuddapah Basin", "Vindhyan Basin", "Bhima Basin", "Chhattisgarh Basin"],
+                    correct: 2,
+                    exp: "The Bhima Basin in Karnataka hosts significant uranium mineralization at Gogi within fractured argillaceous limestones and shales."
+                }
+            ],
+            level4: [
+                {
+                    q: "Which megafloral zone is universally characteristic of the prime coal-bearing Lower Gondwana formations (like Barakar and Raniganj)?",
+                    options: ["Ptilophyllum flora", "Dicroidium flora", "Glossopteris flora", "Archaeopteris flora"],
+                    correct: 2,
+                    exp: "Glossopteris is the defining seed fern index fossil of Permian Lower Gondwana coal measures."
+                },
+                {
+                    q: "The Mikin Formation in the Spiti Valley section is famous for exposing what crucial stratigraphic boundary?",
+                    options: ["Precambrian-Cambrian boundary", "Permian-Triassic boundary", "Cretaceous-Paleogene boundary", "Paleocene-Eocene boundary"],
+                    correct: 1,
+                    exp: "The Mikin Formation preserves the continuous marine Permian-Triassic transition, including Otoceras and Ophiceras ammonoid zones."
+                },
+                {
+                    q: "Which mammalian fossil index datum is classically used to mark the base of the Middle Siwalik (Nagri Formation)?",
+                    options: ["Equus", "Hipparion", "Stegodon", "Elephas nomadicus"],
+                    correct: 1,
+                    exp: "The first appearance of the three-toed horse *Hipparion* marks the base of the Nagri Formation (Middle Siwalik)."
+                },
+                {
+                    q: "What is the primary origin of the Deccan Traps flood basalt province?",
+                    options: [
+                        "Subduction zone arc volcanism along the Himalayas",
+                        "Continental rifting linked to the upwelling Réunion mantle plume",
+                        "Impact melting from a giant Neoproterozoic asteroid",
+                        "Spread of alkaline carbonatite magmas in an ocean trench"
+                    ],
+                    correct: 1,
+                    exp: "The Deccan Traps (~65–60 Ma) erupted as massive tholeiitic basalt floods as the Indian plate passed over the Réunion mantle plume."
+                }
+            ]
+        };
+
+        /* ================= STATE MANAGEMENT ================= */
+        let activeWorkspace = 'study';
+        let currentLevelId = 'level1';
+        let currentTopicId = 'l1_principles';
+
+        // Quiz State
+        let activeQuizTopic = 'all';
+        let currentQuizQuestions = [];
+        let currentQuizPos = 0;
+        let quizCorrectCount = 0;
+        let quizIncorrectCount = 0;
+        let quizAnsweredCurrent = false;
+
+        /* ================= INITIALIZATION & NAVIGATION ================= */
+        function switchWorkspace(ws) {
+            activeWorkspace = ws;
+            const studyDiv = document.getElementById('workspace-study');
+            const quizDiv = document.getElementById('workspace-quiz');
+            const studyBtn = document.getElementById('nav-btn-study');
+            const quizBtn = document.getElementById('nav-btn-quiz');
+
+            if (ws === 'study') {
+                studyDiv.classList.remove('hidden');
+                quizDiv.classList.add('hidden');
+                studyBtn.className = "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 text-white shadow-sm transition";
+                quizBtn.className = "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition";
+            } else {
+                studyDiv.classList.add('hidden');
+                quizDiv.classList.remove('hidden');
+                studyBtn.className = "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition";
+                quizBtn.className = "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 text-white shadow-sm transition";
+                initQuizSession();
+            }
+        }
+
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            const isOpen = !sidebar.classList.contains('-translate-x-full');
+            if (isOpen) {
+                sidebar.classList.add('-translate-x-full');
+                backdrop.classList.add('hidden');
+            } else {
+                sidebar.classList.remove('-translate-x-full');
+                backdrop.classList.remove('hidden');
+            }
+        }
+
+        // Render Curriculum Tree
+        function renderTree() {
+            const container = document.getElementById('tree-container');
+            container.innerHTML = '';
+
+            CURRICULUM_DATA.forEach(level => {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = "space-y-1";
+
+                // Level Header Button
+                const levelBtn = document.createElement('button');
+                levelBtn.className = `w-full text-left px-3 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-between transition ${level.id === currentLevelId ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-300 hover:bg-slate-900 hover:text-white'}`;
+                levelBtn.innerHTML = `
+                    <span class="flex items-center gap-2"><span>${level.icon}</span> <span class="truncate">${level.title}</span></span>
+                    <span class="text-xs text-slate-500">▼</span>
+                `;
+                levelBtn.onclick = () => {
+                    currentLevelId = level.id;
+                    currentTopicId = level.children[0].id;
+                    renderTree();
+                    renderStudyContent();
+                };
+                groupDiv.appendChild(levelBtn);
+
+                // Children Container
+                const childrenBox = document.createElement('div');
+                childrenBox.className = "pl-4 space-y-1 pt-1";
+                if (level.id !== currentLevelId) {
+                    childrenBox.classList.add('hidden');
+                } else {
+                    level.children.forEach(child => {
+                        const childBtn = document.createElement('button');
+                        childBtn.className = `w-full text-left px-3 py-1.5 rounded-lg text-xs font-medium transition truncate ${child.id === currentTopicId ? 'bg-blue-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'}`;
+                        childBtn.textContent = child.title;
+                        childBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            currentLevelId = level.id;
+                            currentTopicId = child.id;
+                            renderTree();
+                            renderStudyContent();
+                            if (window.innerWidth < 1024) toggleMobileSidebar();
+                        };
+                        childrenBox.appendChild(childBtn);
+                    });
+                }
+                groupDiv.appendChild(childrenBox);
+                container.appendChild(groupDiv);
+            });
+        }
+
+        // Render Study Content Card
+        function renderStudyContent() {
+            let foundChild = null;
+            let foundLevel = null;
+
+            CURRICULUM_DATA.forEach(lvl => {
+                lvl.children.forEach(ch => {
+                    if (ch.id === currentTopicId) {
+                        foundChild = ch;
+                        foundLevel = lvl;
+                    }
+                });
+            });
+
+            if (!foundChild) return;
+
+            const card = document.getElementById('content-display-card');
+            card.classList.remove('fade-in');
+            void card.offsetWidth;
+            card.classList.add('fade-in');
+
+            let detailsHtml = '';
+            foundChild.content.details.forEach(det => {
+                detailsHtml += `
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1.5">
+                        <h4 class="font-bold text-xs sm:text-sm text-blue-400 uppercase tracking-wider">${det.label}</h4>
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">${det.text}</p>
+                    </div>
+                `;
+            });
+
+            card.innerHTML = `
+                <div class="flex items-center justify-between gap-2 border-b border-slate-800 pb-4">
+                    <div>
+                        <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">${foundLevel.title}</span>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-white mt-0.5">${foundChild.title}</h2>
+                        <p class="text-xs text-slate-400 mt-1">${foundChild.content.subtitle}</p>
+                    </div>
+                </div>
+
+                <div class="bg-blue-950/30 border border-blue-500/20 rounded-xl p-4 text-xs sm:text-sm text-slate-200 leading-relaxed">
+                    <strong>Core Overview:</strong> ${foundChild.content.summary}
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">In-Depth Stratigraphic Breakdown</h3>
+                    <div class="space-y-3">
+                        ${detailsHtml}
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-800 pt-4 flex items-center justify-between text-xs text-slate-400">
+                    <span><strong>Geological Significance:</strong> ${foundChild.content.significance}</span>
+                </div>
+            `;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* ================= QUIZ ENGINE ================= */
+        function initQuizSession() {
+            activeQuizTopic = document.getElementById('quiz-topic-select').value;
+            let pool = [];
+
+            if (activeQuizTopic === 'all') {
+                Object.keys(QUIZ_QUESTIONS).forEach(k => {
+                    pool = pool.concat(QUIZ_QUESTIONS[k]);
+                });
+            } else {
+                pool = QUIZ_QUESTIONS[activeQuizTopic] || [];
+            }
+
+            // Shuffle pool
+            currentQuizQuestions = [...pool].sort(() => Math.random() - 0.5);
+            currentQuizPos = 0;
+            quizCorrectCount = 0;
+            quizIncorrectCount = 0;
+
+            document.getElementById('quiz-complete-container').classList.add('hidden');
+            document.getElementById('quiz-active-container').classList.remove('hidden');
+            loadQuizQuestion();
+        }
+
+        function changeQuizTopic(val) {
+            activeQuizTopic = val;
+            initQuizSession();
+        }
+
+        function loadQuizQuestion() {
+            quizAnsweredCurrent = false;
+            const q = currentQuizQuestions[currentQuizPos];
+            if (!q) return;
+
+            document.getElementById('quiz-q-counter').textContent = `Question ${currentQuizPos + 1} of ${currentQuizQuestions.length}`;
+            document.getElementById('q-stat-correct').textContent = quizCorrectCount;
+            document.getElementById('q-stat-incorrect').textContent = quizIncorrectCount;
+            document.getElementById('quiz-progress-bar').style.width = `${((currentQuizPos + 1) / currentQuizQuestions.length) * 100}%`;
+            document.getElementById('quiz-question-text').textContent = q.q;
+
+            document.getElementById('quiz-explanation-box').classList.add('hidden');
+            document.getElementById('quiz-next-btn').classList.add('hidden');
+
+            const optionsList = document.getElementById('quiz-options-list');
+            optionsList.innerHTML = '';
+            const letters = ['A', 'B', 'C', 'D'];
+
+            q.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3.5 sm:p-4 rounded-xl border border-slate-800 bg-slate-900 text-slate-200 text-xs sm:text-sm font-medium hover:bg-slate-800 hover:border-slate-700 transition flex items-center justify-between group";
+                btn.innerHTML = `
+                    <span class="flex-1 pr-3">${optText}</span>
+                    <span class="w-6 h-6 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-xs text-slate-400 group-hover:border-slate-500">${letters[idx]}</span>
+                `;
+                btn.onclick = () => submitQuizAnswer(idx, btn);
+                optionsList.appendChild(btn);
+            });
+        }
+
+        function submitQuizAnswer(selectedIndex, selectedBtn) {
+            if (quizAnsweredCurrent) return;
+            quizAnsweredCurrent = true;
+
+            const q = currentQuizQuestions[currentQuizPos];
+            const allBtns = document.querySelectorAll('#quiz-options-list button');
+            const isCorrect = (selectedIndex === q.correct);
+
+            if (isCorrect) {
+                quizCorrectCount++;
+            } else {
+                quizIncorrectCount++;
+            }
+
+            document.getElementById('q-stat-correct').textContent = quizCorrectCount;
+            document.getElementById('q-stat-incorrect').textContent = quizIncorrectCount;
+
+            allBtns.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === q.correct) {
+                    btn.className = "w-full text-left p-3.5 sm:p-4 rounded-xl border border-emerald-500/50 bg-emerald-950/30 text-emerald-200 text-xs sm:text-sm font-medium flex items-center justify-between";
+                } else if (idx === selectedIndex && !isCorrect) {
+                    btn.className = "w-full text-left p-3.5 sm:p-4 rounded-xl border border-rose-500/50 bg-rose-950/30 text-rose-200 text-xs sm:text-sm font-medium flex items-center justify-between";
+                } else {
+                    btn.className = "w-full text-left p-3.5 sm:p-4 rounded-xl border border-slate-800 bg-slate-900/40 text-slate-500 text-xs sm:text-sm font-medium opacity-50 flex items-center justify-between";
+                }
+            });
+
+            const expBox = document.getElementById('quiz-explanation-box');
+            expBox.classList.remove('hidden');
+            const icon = document.getElementById('quiz-exp-icon');
+            const title = document.getElementById('quiz-exp-title');
+
+            if (isCorrect) {
+                expBox.className = "rounded-xl p-4 border bg-emerald-950/30 border-emerald-500/30 text-emerald-200 fade-in";
+                icon.className = "w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white bg-emerald-500 shrink-0";
+                icon.textContent = "✓";
+                title.textContent = "Correct Answer!";
+                title.className = "font-bold text-sm text-emerald-400";
+            } else {
+                expBox.className = "rounded-xl p-4 border bg-rose-950/30 border-rose-500/30 text-rose-200 fade-in";
+                icon.className = "w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white bg-rose-500 shrink-0";
+                icon.textContent = "✕";
+                title.textContent = "Incorrect Answer";
+                title.className = "font-bold text-sm text-rose-400";
+            }
+
+            document.getElementById('quiz-exp-text').textContent = q.exp;
+            document.getElementById('quiz-next-btn').classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            currentQuizPos++;
+            if (currentQuizPos < currentQuizQuestions.length) {
+                loadQuizQuestion();
+            } else {
+                document.getElementById('quiz-active-container').classList.add('hidden');
+                document.getElementById('quiz-complete-container').classList.remove('hidden');
+                document.getElementById('quiz-final-score').textContent = `${quizCorrectCount} / ${currentQuizQuestions.length}`;
+            }
+        }
+
+        function restartQuiz() {
+            initQuizSession();
+        }
+
+        // Boot
+        window.onload = function() {
+            renderTree();
+            renderStudyContent();
+        };
+    </script>
+</body>
+</html>
