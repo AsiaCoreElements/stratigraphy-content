@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Stratigraphy Master Mind Map & Study Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .fade-in { animation: fadeIn 0.25s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.7); }
+    </style>
+</head>
+<body class="min-h-full bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200 flex flex-col justify-between">
+
+    <!-- TOP HEADER -->
+    <header class="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-emerald-600 flex items-center justify-center shadow-md text-white font-bold text-lg">
+                    🧠
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white tracking-tight">Indian Stratigraphy Master Hub</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Interactive Visual Mind Map &amp; Study Dashboard (Levels 1 to 4)</p>
+                </div>
+            </div>
+
+            <!-- Global Search & Theme Toggle -->
+            <div class="flex items-center space-x-3">
+                <div class="relative hidden sm:block w-64">
+                    <input type="text" id="global-search" oninput="handleSearch(this.value)" placeholder="Search formations, cratons..." class="w-full pl-9 pr-4 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs sm:text-sm border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-200">
+                    <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </div>
+
+                <button onclick="toggleTheme()" id="theme-btn" title="Toggle Theme" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <svg id="theme-icon-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg id="theme-icon-moon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Search Bar -->
+        <div class="sm:hidden px-4 pb-3">
+            <input type="text" oninput="handleSearch(this.value)" placeholder="Search formations, cratons..." class="w-full px-4 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs border border-slate-200 dark:border-slate-700 focus:outline-none text-slate-800 dark:text-slate-200">
+        </div>
+    </header>
+
+    <!-- MAIN DASHBOARD CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- STATS & PROGRESS BAR BANNER -->
+        <div class="bg-gradient-to-r from-blue-900/40 via-indigo-900/30 to-slate-900/40 border border-blue-500/20 rounded-2xl p-6 sm:p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="space-y-2 text-center md:text-left">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase tracking-wider">Master Study Dashboard</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Structured Indian Stratigraphy Roadmap</h2>
+                <p class="text-slate-600 dark:text-slate-300 text-sm max-w-2xl leading-relaxed">
+                    Track your study progress across all four levels, from fundamental geological principles and ancient cratonic basements to Proterozoic basins and Phanerozoic successions.
+                </p>
+            </div>
+
+            <!-- Progress Tracker -->
+            <div class="bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 min-w-[240px] shadow-sm text-center space-y-3 shrink-0">
+                <div class="flex justify-between items-center text-xs font-semibold text-slate-500 dark:text-slate-400">
+                    <span>Overall Mastery</span>
+                    <span id="mastery-pct" class="text-blue-600 dark:text-blue-400 font-bold">0%</span>
+                </div>
+                <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div id="mastery-bar" class="h-full bg-blue-600 dark:bg-blue-500 transition-all duration-300 rounded-full" style="width: 0%;"></div>
+                </div>
+                <p id="mastery-count" class="text-xs text-slate-500 dark:text-slate-400">0 of 0 topics checked</p>
+            </div>
+        </div>
+
+        <!-- LEVEL FILTER BUTTONS -->
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+            <div class="flex flex-wrap gap-2" id="level-filters">
+                <button onclick="filterLevel('ALL')" data-level="ALL" class="level-btn px-4 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white transition shadow-sm">All Levels</button>
+                <button onclick="filterLevel('L1')" data-level="L1" class="level-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Level 1: Fundamentals</button>
+                <button onclick="filterLevel('L2')" data-level="L2" class="level-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Level 2: Cratons &amp; Belts</button>
+                <button onclick="filterLevel('L3')" data-level="L3" class="level-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Level 3: Purana Basins</button>
+                <button onclick="filterLevel('L4')" data-level="L4" class="level-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Level 4: Phanerozoic</button>
+            </div>
+            <button onclick="expandAllCards(true)" class="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline">Expand All</button>
+        </div>
+
+        <!-- MIND MAP GRID CONTAINER -->
+        <div id="mindmap-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Dynamically populated via JavaScript -->
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 mt-12 text-center text-xs text-slate-500">
+        <p>GeoStrata India Master Hub &bull; Based on Uploaded Academic Syllabus &amp; Lecture Notes</p>
+    </footer>
+
+    <!-- SCRIPT APPLICATION ENGINE -->
+    <script>
+        /* ================= MASTER ROADMAP DATA REPOSITORY ================= */
+        const MASTER_ROADMAP = [
+            {
+                id: "l1_principles",
+                level: "L1",
+                levelName: "Level 1: Fundamentals",
+                title: "1A. Principles & Time Scale",
+                badgeColor: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+                summary: "Steno's laws, geological philosophies (Catastrophism vs. Uniformitarianism vs. Actualism), and Faunal Succession.",
+                items: [
+                    { title: "Steno's Four Laws of Stratigraphy", desc: "Law of Superposition (younger on top), Original Horizontality (sediments flat), Lateral Continuity (continuous layers), and Cross-Cutting Relationships (intrusions younger)." },
+                    { title: "Historical Geological Philosophies", desc: "Catastrophism (Cuvier): episodic violent events. Uniformitarianism (Hutton & Lyell): 'Present is key to past' (Actualism + Gradualism + Steady-state). Modern Actualism: Physical laws constant, rates/catastrophes vary." },
+                    { title: "Biostratigraphic Principles", desc: "Law of Faunal Succession (William Smith): Fossils succeed vertically in definite order. Index Fossils: Short-lived, widespread taxa used for global correlation." },
+                    { title: "IUGS Chronostratigraphic Time Scale", desc: "Hierarchical classification from Eonothem down to Stage/Age based on GSSPs and radiometric ages (Hadean to Quaternary)." }
+                ]
+            },
+            {
+                id: "l1_craton_basics",
+                level: "L1",
+                levelName: "Level 1: Fundamentals",
+                title: "1B. Craton & Basin Basics",
+                badgeColor: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+                summary: "Shield vs. Platform Cover (Syneclise & Grabens), 4 stages of shield evolution, and 4 structural trends of India.",
+                items: [
+                    { title: "Shield vs. Platform Cover", desc: "Shields are intensely deformed crystalline basement rocks. Platform Covers are undeformed Upper Proterozoic-Phanerozoic sediments in Syneclises (Vindhyan) or Grabens (Gondwana)." },
+                    { title: "4 Stages of Shield Evolution", desc: "Stage 1: Older greenstone remnants. Stage 2: Emplacement of TTG granitic gneisses & migmatites. Stage 3: Newer greenstone volcano-sedimentary troughs. Stage 4: Intense deformation & plutonism." },
+                    { title: "Four Major Structural Trends", desc: "1. Early Archean crust. 2. Iron-ore Orogeny of Singhbhum (2.9 Ga). 3. Late Archean Peninsular Gneisses & Eastern Ghats. 4. Dharwar Orogeny at close of Archean." }
+                ]
+            },
+            {
+                id: "l2_dharwar",
+                level: "L2",
+                levelName: "Level 2: Cratons & Belts",
+                title: "2A. Dharwar Craton (WDC vs EDC)",
+                badgeColor: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+                summary: "Gorur Gneiss (>3.3 Ga), Sargur Group enclaves, Peninsular Gneiss, Bababudan & Chitradurga Groups, and Closepet Granite.",
+                items: [
+                    { title: "WDC vs. EDC Structural Split", desc: "Divided by Chitradurga Shear Zone along Closepet Granite (400 km long). WDC is foreland (TTG, high metamorphism); EDC is accretionary complex (calc-alkaline batholiths, N-S gold greenstone superbelts like Hutti & Kolar)." },
+                    { title: "Stratigraphic Column", desc: "1. Gorur Gneiss (~3.35 Ga). 2. Sargur Group (>3.2 Ga - komatiites, BIF). 3. Peninsular Gneiss (3.2–2.9 Ga). 4. Dharwar Supergroup: Bababudan Group (Kartikere Conglomerate, Kalaspura, Santaveri, Mulaingiri BIF) & Chitradurga Group (Vanivilas carbonates, Ranibennur greywackes). 5. Closepet Granite (~2.51–2.38 Ga)." }
+                ]
+            },
+            {
+                id: "l2_singhbhum",
+                level: "L2",
+                levelName: "Level 2: Cratons & Belts",
+                title: "2A. Singhbhum Craton",
+                badgeColor: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+                summary: "OMG (>3.44 Ga), Singhbhum Granite (Phases I-III), Iron Ore Group (IOG), Singhbhum Group, and Dhanjori/Dalma volcanics.",
+                items: [
+                    { title: "Three Tectonic Components", desc: "Singhbhum Archean Protocontinent, North Singhbhum Mobile Belt (separated by Singhbhum Shear Zone - SSZ), and Chhotanagpur Granite-Gneiss Complex (CGGC)." },
+                    { title: "Stratigraphic Column", desc: "1. Older Metamorphic Group (OMG >3.44 Ga) & OMTG (3.44–3.40 Ga). 2. Singhbhum Granite Phases I, II, III (3.34–3.12 Ga). 3. Iron Ore Group (IOG 3.30–3.10 Ga: Lower Lava → BIF → Upper Lava). 4. Singhbhum Group (Chaibasa high-grade schists & Dhalbhum phyllites). 5. Simlipal (~3.09 Ga), Dhanjori & Dalma (2.8 Ga), Kolhan Group (<2.22 Ga)." }
+                ]
+            },
+            {
+                id: "l2_bastar",
+                level: "L2",
+                levelName: "Level 2: Cratons & Belts",
+                title: "2A. Bastar Craton & Kotri-Dongargarh",
+                badgeColor: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+                summary: "Sukma (~3.5 Ga), Amgaon, Bengpal (~2.5 Ga) groups, Bailadila Group, Nandgaon Group, Dongargarh Granite, and Khairagarh Group.",
+                items: [
+                    { title: "Basement Enclaves", desc: "Sukma Group (~3.5–3.0 Ga: Mafics, ultramafics, BIF), Amgaon Group, and Bengpal Group (~2.5 Ga: Quartzite, schist, metabasics)." },
+                    { title: "Kotri-Dongargarh Belt", desc: "Bailadila Group (~2.4 Ga: BIF iron ores). Nandgaon Group: Bijli Rhyolite (~2.5 Ga) & Pitepani Volcanics. Dongargarh Granite (~2.3 Ga). Khairagarh Group: Alternating clastics and rift volcanics (Sitagota, Mangikhuta, Ghogra)." }
+                ]
+            },
+            {
+                id: "l2_aravalli_bundelkhand",
+                level: "L2",
+                levelName: "Level 2: Cratons & Belts",
+                title: "2A. Aravalli & Bundelkhand Cratons",
+                badgeColor: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+                summary: "Banded Gneissic Complex (BGC), Aravalli Supergroup, Delhi Supergroup, Erinpura Granite, Malani Rhyolite, and Bundelkhand Complex.",
+                items: [
+                    { title: "Aravalli & Bundelkhand Blocks", desc: "Divided by Great Boundary Fault (GBF). Aravalli Craton basement is BGC (3.3–2.5 Ga). Aravalli Supergroup (2.2–1.85 Ga) features Jhamarkotra phosphatic dolomites. Delhi Supergroup (~1.72–1.45 Ga) includes Alwar quartzites and Ajabgarh calc-silicates. Post-Delhi: Erinpura Granite (850 Ma) and Malani Volcanics (780–680 Ma)." },
+                    { title: "Bundelkhand Craton", desc: "Comprises Enclave Suite, Bundelkhand Igneous Complex, and extensive Mafic Dyke Swarms extending up to 50 km." }
+                ]
+            },
+            {
+                id: "l2_mobile_belts",
+                level: "L2",
+                levelName: "Level 2: Cratons & Belts",
+                title: "2B. Proterozoic Mobile Belts (CITZ, EGMB, SGT)",
+                badgeColor: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+                summary: "Central Indian Tectonic Zone, Eastern Ghats Mobile belt (2 Wilson cycles), and Southern Granulite Terrane (Pandyan Mobile Belt).",
+                items: [
+                    { title: "Central Indian Tectonic Zone (CITZ)", desc: "Defined by SNNF, SNSF, Tan Shear, and CIS. Major belts: Mahakoshal Belt (2.4–1.8 Ga), Betul Belt (~1.5 Ga arc), and Sausar Belt (1.5–1.0 Ga, famous for Mansar Fm manganese ores)." },
+                    { title: "Eastern Ghats Mobile Belt (EGMB)", desc: "Extends from Brahmani river to Ongole. Divided into Transition zone, Charnockite zone, Khondalite zone, and Central Migmatite zone. Records 2 Wilson cycles (1.85 Ga & 1.0 Ga)." },
+                    { title: "Southern Granulite Terrane (SGT)", desc: "Separated from Dharwar Craton by Fermor Line. Contains Moyar-Bhavani (MBSZ), Palghat-Cauvery (PCSZ), and Achankovil (ACSZ) shear zones. Blocks include Salem, Nilgiri (deepest exhumed crust), Madras, Madurai (UHP/UHT ~1000–1100°C), and Trivandrum (Kerala Khondalite Belt)." }
+                ]
+            },
+            {
+                id: "l3_cuddapah",
+                level: "L3",
+                levelName: "Level 3: Purana Basins",
+                title: "3A. Cuddapah Basin & Kurnool Group",
+                badgeColor: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
+                summary: "Papaghni, Chitravati, Nallamalai, Srisailam groups, and the overlying Kurnool Group with diamondiferous Banganapalle conglomerates.",
+                items: [
+                    { title: "Cuddapah Supergroup", desc: "Papaghni Group (Gulcheru Sst, Vempalle Lst/Dol with Tummalapalle U & asbestos) → Chitravati Group (Pulivendla, Tadpatri shales/tuffs, Gandikota) → Nallamalai Group (Bairenkonda/Nagari Sst, Cumbum Fm with Mangampeta barytes & Agnigundala Pb-Zn) → Srisailam Quartzite." },
+                    { title: "Kurnool Group (Unconformable)", desc: "Banganapalle Fm (Diamondiferous conglomerate) → Narji Limestone ('Cuddapah slabs') → Owk Shale → Paniam Quartzite ('Pinnacled quartz arenite') → Kolikuntala Limestone → Nandyal Shale." }
+                ]
+            },
+            {
+                id: "l3_vindhyan",
+                level: "L3",
+                levelName: "Level 3: Purana Basins",
+                title: "3B. Vindhyan & Chhattisgarh Basins",
+                badgeColor: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
+                summary: "Lower Vindhyan (Semri Group with Porcellinite markers), Upper Vindhyan (Kaimur, Rewa, Bhander groups), and Chhattisgarh Basin.",
+                items: [
+                    { title: "Vindhyan Supergroup", desc: "Semri Group (Lower Vindhyan ~1.3 Ga: Basal Fm, Porcellinite volcanic ash marker, Kheinjua, Rohtas Lst) → Kaimur Group → Rewa Group (Diamond-bearing conglomerates) → Bhander Group (Sirbu shales, Bhander Lst, Upper Bhander Sst)." },
+                    { title: "Chhattisgarh & Indravati Basins", desc: "Chhattisgarh Supergroup (~36,000 sq km): Singhora Group (~1500 Ma), Chandarpur Group (Lohardih conglomerate, Kansapathar sst), Raipur Group (~1000 Ma: Charmuria, Gunderdehi, Chandi, Hirri). Indravati Basin: Tiratgarh Sst → Cherakur → Kanger Lst → Jagdalpur Fm (700–750 Ma)." }
+                ]
+            },
+            {
+                id: "l3_other_purana",
+                level: "L3",
+                levelName: "Level 3: Purana Basins",
+                title: "3C. Kaladgi-Badami, Bhima & Marwar Basins",
+                badgeColor: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
+                summary: "Kaladgi Supergroup (Bagalkot + Badami), Bhima Group (Shahabad limestone & Gogi uranium), and Marwar Supergroup.",
+                items: [
+                    { title: "Kaladgi-Badami & Bhima Basins", desc: "Kaladgi-Badami Basin: Binary evolution with Bagalkot Group (deformed) unconformably overlain by Badami Group (undeformed). Bhima Basin: Rabanpalli Sst → Shahabad Limestone → Sedam → Halkal → Andola Subgroup (Gogi uranium occurrence)." },
+                    { title: "Marwar Basin & Malani Volcanics", desc: "Marwar Supergroup: Jodhpur Group → Bilara Group (Limestone/Dolomite) → Nagaur Group (Evaporites, ~635–543 Ma). Underlain by Malani Igneous Suite (780–680 Ma massive felsic magmatism)." }
+                ]
+            },
+            {
+                id: "l4_palaeozoic_gondwana",
+                level: "L4",
+                levelName: "Level 4: Phanerozoic",
+                title: "4A. Marine Palaeozoic & Gondwana Supergroup",
+                badgeColor: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
+                summary: "Salt Range, Kashmir, Spiti Valley sections, and Gondwana rift basins (Talchir to Jabalpur, Glossopteris-Dicroidium-Ptilophyllum).",
+                items: [
+                    { title: "Himalayan & Salt Range Palaeozoic", desc: "Salt Range (Pakistan): Saline Series → Purple Sst → Neobolus Shale → Magnesian Sst → Talchir Boulder Bed → Productus Limestone (world-famous Permian brachiopods/ammonites). Kashmir: Dogra Slates → Muth Quartzite → Syringothyris Lst → Fenestella Shales → Panjal Traps (2300m basalt) → Zewan Fm. Spiti: Haimanta Group → Kuling Group (Gungri Fm, Permian) → P-T Boundary Mikin Fm (Otoceras-Ophiceras zones)." },
+                    { title: "Gondwana Supergroup (Rift Basins)", desc: "Lower Gondwana (Permian): Talchir (glacial boulder beds), Karharbari, Barakar (main prime coking coal measure), Barren Measures (ironstone shales), Raniganj. Middle Gondwana (Triassic): Panchet, Pachmarhi, Maleri, Tiki (*Dicroidium* flora). Upper Gondwana (Jurassic-Cretaceous): Rajmahal Traps & intertrappeans (*Ptilophyllum* flora), Kota, Jabalpur, and Umia Fms." }
+                ]
+            },
+            {
+                id: "l4_mesozoic_cenozoic",
+                level: "L4",
+                levelName: "Level 4: Phanerozoic",
+                title: "4B. Mesozoic Basins, Traps & Siwaliks",
+                badgeColor: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
+                summary: "Kutch, Cauvery, Bagh/Lameta beds, Rajmahal & Deccan Traps, and Siwalik molasse biozones.",
+                items: [
+                    { title: "Mesozoic Marine Shelves & Basins", desc: "Kutch: Patcham → Chari (Dhosa Oolite marker) → Katrol → Umia. Cauvery Basin (East Coast): Terani → Dalmiapuram → Uttatur → Trichinopoly → Ariyalur → Niniyur. Narmada Valley: Bagh Beds & Lameta Beds (estuarine/lacustrine dinosaur beds beneath traps)." },
+                    { title: "Traps & Cenozoic Foreland Basins", desc: "Rajmahal Traps (~132 Ma, Kerguelen plume). Deccan Traps (~66-60 Ma, Réunion hotspot flood basalts): Kasulbai, Lonavala, Devighat, Mahabaleshwar subgroups. Subathu Fm (Eocene nummulitic limestone). Siwalik Group (5000-6000m molasse): Lower Siwalik (Chinji, Kamlial), Middle Siwalik (Nagri with *Hipparion*, Dhokpathan with *Stegodon*), Upper Siwalik (Tatrot, Pinjor, Boulder Conglomerate with *Equus* & *Elephas*)." }
+                ]
+            }
+        ];
+
+        /* ================= STATE MANAGEMENT ================= */
+        let userCheckedItems = JSON.parse(localStorage.getItem('geostrata_master_checked') || '{}');
+        let currentFilter = 'ALL';
+        let searchQuery = '';
+
+        // Theme Controller
+        function initTheme() {
+            const saved = localStorage.getItem('geostrata_master_theme');
+            if (saved === 'dark') {
+                document.documentElement.classList.add('dark');
+                updateThemeIcons(true);
+            } else {
+                document.documentElement.classList.remove('dark');
+                updateThemeIcons(false);
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('geostrata_master_theme', isDark ? 'dark' : 'light');
+            updateThemeIcons(isDark);
+        }
+
+        function updateThemeIcons(isDark) {
+            document.getElementById('theme-icon-sun').classList.toggle('hidden', !isDark);
+            document.getElementById('theme-icon-moon').classList.toggle('hidden', isDark);
+        }
+
+        // Filtering Logic
+        function filterLevel(level) {
+            currentFilter = level;
+            document.querySelectorAll('.level-btn').forEach(btn => {
+                if (btn.getAttribute('data-level') === level) {
+                    btn.className = "level-btn px-4 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white transition shadow-sm";
+                } else {
+                    btn.className = "level-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition";
+                }
+            });
+            renderMindMap();
+        }
+
+        function handleSearch(query) {
+            searchQuery = query.toLowerCase().trim();
+            renderMindMap();
+        }
+
+        // Checkbox State Management
+        function toggleCheck(id) {
+            userCheckedItems[id] = !userCheckedItems[id];
+            localStorage.setItem('geostrata_master_checked', JSON.stringify(userCheckedItems));
+            updateMasteryStats();
+        }
+
+        function updateMasteryStats() {
+            let totalItems = 0;
+            let checkedItems = 0;
+
+            MASTER_ROADMAP.forEach(card => {
+                card.items.forEach((_, idx) => {
+                    const uniqueKey = `${card.id}_${idx}`;
+                    totalItems++;
+                    if (userCheckedItems[uniqueKey]) checkedItems++;
+                });
+            });
+
+            const pct = totalItems > 0 ? Math.round((checkedItems / totalItems) * 100) : 0;
+            document.getElementById('mastery-bar').style.width = `${pct}%`;
+            document.getElementById('mastery-pct').textContent = `${pct}%`;
+            document.getElementById('mastery-count').textContent = `${checkedItems} of ${totalItems} topics checked`;
+        }
+
+        function expandAllCards(expand) {
+            document.querySelectorAll('details').forEach(d => {
+                d.open = expand;
+            });
+        }
+
+        // Render Mind Map Grid
+        function renderMindMap() {
+            const container = document.getElementById('mindmap-container');
+            container.innerHTML = '';
+
+            let filtered = MASTER_ROADMAP;
+            if (currentFilter !== 'ALL') {
+                filtered = filtered.filter(c => c.level === currentFilter);
+            }
+
+            if (searchQuery) {
+                filtered = filtered.filter(c => {
+                    const matchCardTitle = c.title.toLowerCase().includes(searchQuery) || c.summary.toLowerCase().includes(searchQuery);
+                    const matchItems = c.items.some(i => i.title.toLowerCase().includes(searchQuery) || i.desc.toLowerCase().includes(searchQuery));
+                    return matchCardTitle || matchItems;
+                });
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-16 text-center space-y-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+                        <div class="text-3xl">🔍</div>
+                        <h3 class="font-bold text-slate-800 dark:text-slate-200">No matching stratigraphy topics found</h3>
+                        <p class="text-xs text-slate-500">Try adjusting your search query or level filter.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(card => {
+                const cardEl = document.createElement('div');
+                cardEl.className = "bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:border-slate-300 dark:hover:border-slate-700 transition-all";
+
+                let itemsHtml = '';
+                card.items.forEach((item, idx) => {
+                    const uniqueKey = `${card.id}_${idx}`;
+                    const isChecked = !!userCheckedItems[uniqueKey];
+
+                    itemsHtml += `
+                        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60 space-y-1.5 transition-all">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="flex items-start gap-2.5">
+                                    <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleCheck('${uniqueKey}')" class="mt-1 w-4 h-4 rounded text-blue-600 focus:ring-blue-500 border-slate-300 dark:border-slate-600 cursor-pointer">
+                                    <h4 class="text-sm font-bold text-slate-900 dark:text-white leading-snug">${item.title}</h4>
+                                </div>
+                                <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 shrink-0">${card.levelName}</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 pl-6 leading-relaxed">${item.desc}</p>
+                        </div>
+                    `;
+                });
+
+                cardEl.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-bold border ${card.badgeColor}">${card.levelName}</span>
+                            <span class="text-xs font-medium text-slate-400">${card.items.length} sub-topics</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">${card.title}</h3>
+                            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">${card.summary}</p>
+                        </div>
+                        <div class="space-y-2.5 pt-2 border-t border-slate-100 dark:border-slate-800">
+                            ${itemsHtml}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(cardEl);
+            });
+        }
+
+        // Boot Application
+        window.onload = function () {
+            initTheme();
+            renderMindMap();
+            updateMasteryStats();
+        };
+    </script>
+</body>
+</html>
