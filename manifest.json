@@ -9,7 +9,13 @@
       "url": "https://asiacoreelements.github.io/stratigraphy-content/IMG_8666~2.jpg"
     }
   ],
-  "diagrams": [],
+  "diagrams": [
+    {
+      "title": "Grand Canyon Stratigraphic Column",
+      "filename": "grand canyon strat column.png",
+      "url": "https://asiacoreelements.github.io/stratigraphy-content/grand%20canyon%20strat%20column.png"
+    }
+  ],
   "documents": [],
   "quizzes": []
 }
